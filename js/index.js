@@ -5,6 +5,8 @@ const reset = document.querySelector(".reset");
 const cards = document.querySelector(".cards");
 const card1 = document.querySelector(".card1");
 
+const num = 24;
+
 // increment time
 let t = 0;
 let x = setInterval(function() {
@@ -22,9 +24,14 @@ reset.addEventListener("click", function(event) {
   t = 0;
   m = 0;
   moves.innerHTML = 0;
+  const cardsList = getBoxes(num);
+  let boxes = "";
+  cardsList.forEach(card => {
+    const style = `background-color:${card.color};`;
+    boxes += `<div class='card' style=${style}>${card.color}</div>`;
+  });
+  cards.innerHTML = `${boxes}`;
 });
-
-const num = 24;
 
 function getBoxes(num) {
   const colorSet = new Set();
@@ -40,31 +47,22 @@ function getBoxes(num) {
 
 function getAllRandomColor() {
   const allColors = [
-    "AliceBlue",
     "Aquamarine",
-    "Azure",
-    "Beige",
     "Black",
-    "BlanchedAlmond",
     "Blue",
     "BlueViolet",
     "BurlyWood",
     "CadetBlue",
-    "Chartreuse",
-    "Chocolate",
-    "Coral",
     "CornflowerBlue",
     "Crimson",
     "DarkBlue",
     "DarkGoldenRod",
-    "DarkGreen",
     "DarkKhaki",
     "DarkMagenta",
     "DarkOliveGreen",
     "Darkorange",
     "DarkOrchid",
     "DarkSalmon",
-    "DarkSeaGreen",
     "DarkSlateBlue",
     "DarkSlateGray",
     "DarkSlateGrey",
@@ -77,60 +75,26 @@ function getAllRandomColor() {
     "DodgerBlue",
     "FireBrick",
     "ForestGreen",
-    "Fuchsia",
-    "Gainsboro",
     "Gold",
     "GoldenRod",
-    "Gray",
-    "Grey",
     "Green",
-    "GreenYellow",
-    "HoneyDew",
     "HotPink",
     "IndianRed",
     "Indigo",
     "Khaki",
     "Lavender",
     "LawnGreen",
-    "LemonChiffon",
-    "LightBlue",
-    "LightCoral",
-    "LightCyan",
-    "LightGray",
-    "LightGrey",
-    "LightGreen",
-    "LightPink",
-    "LightSalmon",
-    "LightSeaGreen",
-    "LightSkyBlue",
-    "LightSlateGray",
-    "LightSlateGrey",
-    "LightSteelBlue",
     "Lime",
-    "LimeGreen",
     "Magenta",
     "Maroon",
-    "MediumAquaMarine",
-    "MediumBlue",
-    "MediumOrchid",
-    "MediumPurple",
-    "MediumSeaGreen",
-    "MediumSlateBlue",
-    "MediumSpringGreen",
-    "MediumTurquoise",
-    "MediumVioletRed",
-    "MidnightBlue",
     "Moccasin",
     "Navy",
     "Olive",
     "Orange",
     "OrangeRed",
     "Orchid",
-    "PaleGoldenRod",
     "PaleGreen",
     "PaleVioletRed",
-    "PapayaWhip",
-    "PeachPuff",
     "Peru",
     "Pink",
     "PowderBlue",
@@ -147,7 +111,6 @@ function getAllRandomColor() {
     "SkyBlue",
     "SlateBlue",
     "SlateGray",
-    "SlateGrey",
     "SpringGreen",
     "SteelBlue",
     "Tan",
@@ -157,7 +120,6 @@ function getAllRandomColor() {
     "Turquoise",
     "Violet",
     "White",
-    "WhiteSmoke",
     "Yellow",
     "YellowGreen"
   ];
@@ -166,8 +128,6 @@ function getAllRandomColor() {
 }
 
 const cardsList = getBoxes(num);
-// card1.innerHTML = cardsList[0].color;
-// cardsList.map(card => card1.insertAdjacentHTML("afterend", `<div>${card.color}</div>`));
 let boxes = "";
 cardsList.forEach(card => {
   const style = `background-color:${card.color};`;
