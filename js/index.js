@@ -5,7 +5,11 @@ const reset = document.querySelector(".reset");
 const cards = document.querySelector(".cards");
 const card1 = document.querySelector(".card1");
 
-const num = 24;
+const num = 6;
+let m = 0;
+let clicks = 0;
+let savedColor = null;
+let savedCard = null;
 
 // increment time
 let t = 0;
@@ -14,12 +18,6 @@ let x = setInterval(function() {
   time.innerHTML = t;
 }, 1000);
 
-let m = 0;
-button.addEventListener("click", function(event) {
-  m++;
-  moves.innerHTML = m;
-});
-
 reset.addEventListener("click", function(event) {
   t = 0;
   m = 0;
@@ -27,10 +25,12 @@ reset.addEventListener("click", function(event) {
   const cardsList = getBoxes(num);
   let boxes = "";
   cardsList.forEach(card => {
-    const style = `background-color:${card.color};`;
-    boxes += `<div class='card' style=${style}>${card.color}</div>`;
+    boxes += `<div class='card' onclick="turnCard(this, '${card}')"></div>`;
   });
   cards.innerHTML = `${boxes}`;
+  clicks = 0;
+  savedColor = null;
+  savedCard = null;
 });
 
 function getBoxes(num) {
@@ -40,15 +40,13 @@ function getBoxes(num) {
   }
   const colorList = Array.from(colorSet);
   const shuffleArray = arr => arr.slice().sort(() => Math.random() - 0.5);
-  const boxColorList = shuffleArray([...colorList, ...colorList]);
-  const boxList = boxColorList.map((color, id) => ({ color, id, show: false }));
+  const boxList = shuffleArray([...colorList, ...colorList]);
   return boxList;
 }
 
 function getAllRandomColor() {
   const allColors = [
     "Aquamarine",
-    "Black",
     "Blue",
     "BlueViolet",
     "BurlyWood",
@@ -127,10 +125,35 @@ function getAllRandomColor() {
   return allColors[colorIndex];
 }
 
+function turnCard(ele, color) {
+  ele.style.backgroundColor = color;
+  clicks++;
+  if (clicks === 2) {
+    m++;
+    moves.innerHTML = m;
+    if (savedColor === color) {
+      ele.style.backgroundColor = color;
+      savedCard = null;
+      savedColor = null;
+      clicks = 0;
+    } else {
+      setTimeout(() => {
+        savedCard.style.backgroundColor = "black";
+        ele.style.backgroundColor = "black";
+        savedCard = null;
+        savedColor = null;
+        clicks = 0;
+      }, 1000);
+    }
+  } else if (clicks === 1) {
+    savedCard = ele;
+    savedColor = color;
+  }
+}
+
 const cardsList = getBoxes(num);
 let boxes = "";
 cardsList.forEach(card => {
-  const style = `background-color:${card.color};`;
-  boxes += `<div class='card' style=${style}>${card.color}</div>`;
+  boxes += `<div class='card' onclick="turnCard(this, '${card}')"></div>`;
 });
 cards.innerHTML = `${boxes}`;
