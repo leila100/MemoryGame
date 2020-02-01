@@ -4,8 +4,15 @@ const moves = document.querySelector(".moves");
 const reset = document.querySelector(".reset");
 const cards = document.querySelector(".cards");
 const card1 = document.querySelector(".card1");
+const lowest = document.querySelector(".lowest");
 
-const num = 24;
+const num = 6;
+let m = 0;
+let clicks = 0;
+let savedColor = null;
+let savedCard = null;
+let highestScore = null;
+let count = 0;
 
 // increment time
 let t = 0;
@@ -14,24 +21,23 @@ let x = setInterval(function() {
   time.innerHTML = t;
 }, 1000);
 
-let m = 0;
-button.addEventListener("click", function(event) {
-  m++;
-  moves.innerHTML = m;
-});
-
-reset.addEventListener("click", function(event) {
+function resetGame() {
   t = 0;
   m = 0;
+  count = 0;
+  clicks = 0;
+  savedColor = null;
+  savedCard = null;
   moves.innerHTML = 0;
   const cardsList = getBoxes(num);
   let boxes = "";
   cardsList.forEach(card => {
-    const style = `background-color:${card.color};`;
-    boxes += `<div class='card' style=${style}>${card.color}</div>`;
+    boxes += `<div class='card' onclick="turnCard(this, '${card}')"></div>`;
   });
   cards.innerHTML = `${boxes}`;
-});
+}
+
+reset.addEventListener("click", resetGame);
 
 function getBoxes(num) {
   const colorSet = new Set();
@@ -40,15 +46,13 @@ function getBoxes(num) {
   }
   const colorList = Array.from(colorSet);
   const shuffleArray = arr => arr.slice().sort(() => Math.random() - 0.5);
-  const boxColorList = shuffleArray([...colorList, ...colorList]);
-  const boxList = boxColorList.map((color, id) => ({ color, id, show: false }));
+  const boxList = shuffleArray([...colorList, ...colorList]);
   return boxList;
 }
 
 function getAllRandomColor() {
   const allColors = [
     "Aquamarine",
-    "Black",
     "Blue",
     "BlueViolet",
     "BurlyWood",
@@ -127,10 +131,45 @@ function getAllRandomColor() {
   return allColors[colorIndex];
 }
 
+function turnCard(ele, color) {
+  ele.style.backgroundColor = color;
+  clicks++;
+  if (clicks === 2) {
+    m++;
+    moves.innerHTML = m;
+    if (savedColor === color) {
+      count++;
+      if (count === num) {
+        if (highestScore === null || m < highestScore) {
+          alert(`You beat the game in less moves. The score to beat is now: ${m}`);
+          highestScore = m;
+          lowest.innerHTML = highestScore;
+        } else alert(`Good job! You can do better. The lowest moves is: ${highestScore}`);
+        resetGame();
+      } else {
+        ele.style.backgroundColor = color;
+        savedCard = null;
+        savedColor = null;
+        clicks = 0;
+      }
+    } else {
+      setTimeout(() => {
+        savedCard.style.backgroundColor = "black";
+        ele.style.backgroundColor = "black";
+        savedCard = null;
+        savedColor = null;
+        clicks = 0;
+      }, 1000);
+    }
+  } else if (clicks === 1) {
+    savedCard = ele;
+    savedColor = color;
+  }
+}
+
 const cardsList = getBoxes(num);
 let boxes = "";
 cardsList.forEach(card => {
-  const style = `background-color:${card.color};`;
-  boxes += `<div class='card' style=${style}>${card.color}</div>`;
+  boxes += `<div class='card' onclick="turnCard(this, '${card}')"></div>`;
 });
 cards.innerHTML = `${boxes}`;
